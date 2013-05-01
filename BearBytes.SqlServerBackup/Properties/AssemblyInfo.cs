@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BearBytes.SqlServerBackup")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SQL Server Backup Utility")]
+[assembly: AssemblyDescription("Provides backup options for SQL Server")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BearBytes.SqlServerBackup")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCompany("The Bear Bytes")]
+[assembly: AssemblyProduct("SQL Server Backup Utility")]
+[assembly: AssemblyCopyright("Copyright © The Bear Bytes 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
