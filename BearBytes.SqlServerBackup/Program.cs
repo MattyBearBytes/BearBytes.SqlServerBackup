@@ -59,7 +59,6 @@ namespace BearBytes.SqlServerBackup
                 Log.Fatal("Error: Backup aborted.  Message: {0}", ex.Message);
             }
 
-            Console.Read();
         }
     }
 }
