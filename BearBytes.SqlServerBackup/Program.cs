@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
 
 namespace BearBytes.SqlServerBackup
@@ -22,20 +19,16 @@ namespace BearBytes.SqlServerBackup
 
                 var connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ToString();
                 var databaseName = ConfigurationManager.AppSettings["DatabaseName"];
-                var backupDir = ConfigurationManager.AppSettings["BackupDirectory"];
+                var backupDirs = ConfigurationManager.AppSettings["BackupDirectories"].Split(',');
 
-                if(Directory.Exists(backupDir))
-                    Log.Info("Backup directory exists.");
-                else
-                {
-                    Log.Info("Backup directory doesn't exist.  Creating directory.");
-                    Directory.CreateDirectory(backupDir);
-                }
+                //Make sure the backup directories exist
+                foreach (var backupDir in backupDirs.Where(backupDir => !Directory.Exists(backupDir)))
+                    throw new Exception("Backup directory '" + backupDir + "' doesn't exist.");
 
-                Log.Info("Backing up database '{0}' to '{1}'", databaseName, backupDir);
+                Log.Info("Backing up database '{0}' to '{1}'", databaseName, backupDirs[0]);
 
-                var backupFileName = "Backup_" + databaseName + "_" + DateTime.Now.ToString("yyyymmdd") + ".bak";
-                var backupFilePath = Path.Combine(backupDir, backupFileName);
+                var backupFileName = "Backup_" + databaseName + "_" + DateTime.Now.ToString("yyyymmdd_HHmn") + ".bak";
+                var backupFilePath = Path.Combine(backupDirs[0], backupFileName);
 
                 using (var conn = new SqlConnection(connectionString))
                 {
@@ -52,20 +45,21 @@ namespace BearBytes.SqlServerBackup
                     }
                 }
 
-                //Make sure that the new backup file exists
-                if (File.Exists(backupFilePath))
+                //Copy backup to other locations if specified
+                foreach (var backupDir in backupDirs.Where(x => x != backupDirs[0]))
                 {
-                    Log.Info("Backup Successful");
+                    File.Copy(backupFilePath, Path.Combine(backupDir, backupFileName));
+                    Log.Info("Copied backup to: {0}", backupDir);
                 }
-                else
-                {
-                    Log.Warn("Backup file not found after completing without errors.");
-                }
+
+                Log.Info("Backup completed successfully!");
             }
             catch (Exception ex)
             {
                 Log.Fatal("Error: Backup aborted.  Message: {0}", ex.Message);
             }
+
+            Console.Read();
         }
     }
 }
