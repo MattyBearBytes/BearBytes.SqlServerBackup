@@ -27,7 +27,7 @@ namespace BearBytes.SqlServerBackup
 
                 Log.Info("Backing up database '{0}' to '{1}'", databaseName, backupDirs[0]);
 
-                var backupFileName = "Backup_" + databaseName + "_" + DateTime.Now.ToString("yyyymmdd_HHmn") + ".bak";
+                var backupFileName = "Backup_" + databaseName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".bak";
                 var backupFilePath = Path.Combine(backupDirs[0], backupFileName);
 
                 using (var conn = new SqlConnection(connectionString))
